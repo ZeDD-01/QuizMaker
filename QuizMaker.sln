@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuizMaker", "QuizMaker\QuizMaker.csproj", "{CE900DB7-714E-4AAF-8BA1-C8F0B0E46873}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CE900DB7-714E-4AAF-8BA1-C8F0B0E46873}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE900DB7-714E-4AAF-8BA1-C8F0B0E46873}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE900DB7-714E-4AAF-8BA1-C8F0B0E46873}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE900DB7-714E-4AAF-8BA1-C8F0B0E46873}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
