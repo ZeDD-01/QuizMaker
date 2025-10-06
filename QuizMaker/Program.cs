@@ -3,9 +3,25 @@
 namespace QuizMaker
 {
     class Program
-{
+    {
+
+        public List<Question> Questions;
+        public List<Answer> Answers;
+        public List<Quiz> Quizzes;
+    
+    
     static void Main(string[] args)
     {
+
+        startGame();
+    }
+
+
+    public static void createQuestion()
+    {
+        
+    }
+    public static void startGame(){
         do
         {
             Console.WriteLine("Welcome to the Quiz Maker!");
@@ -39,7 +55,6 @@ namespace QuizMaker
                 Console.WriteLine("Wrong input. Please try again.");
             }
         }while (true);
-        
     }
 }
 }
