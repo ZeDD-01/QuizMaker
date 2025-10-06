@@ -1,60 +1,43 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using System;
 
 namespace QuizMaker
 {
     class Program
     {
-
-        public List<Question> Questions;
-        public List<Answer> Answers;
-        public List<Quiz> Quizzes;
-    
-    
-    static void Main(string[] args)
-    {
-
-        startGame();
-    }
-
-
-    public static void createQuestion()
-    {
-        
-    }
-    public static void startGame(){
-        do
+        static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to the Quiz Maker!");
-            Console.WriteLine("Please choose if you want to");
-            Console.WriteLine("1 - play an existing quiz ");
-            Console.WriteLine("2 - create a new quiz ");
-            Console.WriteLine("3 - Exit the program ");
-            Console.WriteLine("Your choice: ");
+            StartGame();
+        }
 
-            string choice = Console.ReadLine();
+        public static void StartGame()
+        {
+            do
+            {
+                Console.WriteLine("Welcome to the Quiz Maker!");
+                Console.WriteLine("1 - Play an existing quiz");
+                Console.WriteLine("2 - Create a new quiz");
+                Console.WriteLine("3 - Exit");
+                Console.Write("Your choice: ");
 
-            Console.WriteLine($"You chose {choice}");
+                string choice = Console.ReadLine();
 
-            if (choice == "1")
-            {
-                //Choose from Quiz List
-                break;
-            }
-            else if (choice == "2")
-            {
-                Quiz myQuiz = new Quiz();
-                break;
-            }
-            else if (choice == "3")
-            {
-                Console.WriteLine("Goodbye");
-                return;
-            }
-            else
-            {
-                Console.WriteLine("Wrong input. Please try again.");
-            }
-        }while (true);
+                switch (choice)
+                {
+                    case "1":
+                        // Here the quiz will be loaded and played
+                        Console.WriteLine("Play Quiz – not implemented yet!");
+                        break;
+                    case "2":
+                        QuizManager.CreateQuiz();
+                        break;
+                    case "3":
+                        Console.WriteLine("Goodbye!");
+                        return;
+                    default:
+                        Console.WriteLine("Invalid input. Try again.");
+                        break;
+                }
+            } while (true);
+        }
     }
-}
 }
