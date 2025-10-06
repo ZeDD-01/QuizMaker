@@ -1,6 +1,12 @@
-namespace QuizMaker.Data;
+using System;
+using System.Collections.Generic;
 
-public class Quiz
+namespace QuizMaker
 {
-    
+    [Serializable]
+    public class Quiz
+    {
+        public string Title { get; set; }
+        public List<Question> Questions { get; set; } = new List<Question>();
+    }
 }
