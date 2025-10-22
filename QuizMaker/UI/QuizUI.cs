@@ -19,7 +19,7 @@ namespace QuizMaker
                 switch (choice)
                 {
                     case "1":
-                        Console.WriteLine("Play Quiz – not implemented yet!");
+                        PlayQuizUI();
                         break;
                     case "2":
                         CreateQuizUI();
@@ -69,5 +69,75 @@ namespace QuizMaker
             QuizManager.SaveQuiz(quiz);
             Console.WriteLine($"Quiz '{quiz.Title}' saved successfully!");
         }
+        
+        private static void PlayQuizUI()
+    {
+        var quizzes = QuizManager.GetAvailableQuizzes();
+        if (quizzes.Count == 0)
+        {
+            Console.WriteLine("No quizzes found. Please create one first.");
+            return;
+        }
+
+        Console.WriteLine("\nAvailable quizzes:");
+        for (int i = 0; i < quizzes.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}. {Path.GetFileNameWithoutExtension(quizzes[i])}");
+        }
+
+        Console.WriteLine("Enter the number of the quiz you want to play:");
+        if (!int.TryParse(Console.ReadLine(), out int choice) || choice < 1 || choice > quizzes.Count)
+        {
+            Console.WriteLine("Invalid choice.");
+            return;
+        }
+
+        var selectedQuiz = QuizManager.LoadQuiz(quizzes[choice - 1]);
+        Console.WriteLine($"\nStarting quiz: {selectedQuiz.Title}\n");
+
+        int score = 0;
+        int total = selectedQuiz.Questions.Count;
+
+        Random rng = new Random();
+        foreach (var question in selectedQuiz.Questions.OrderBy(q => rng.Next()))
+        {
+            Console.WriteLine(question.Text);
+
+            for (int i = 0; i < question.Answers.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {question.Answers[i].Text}");
+            }
+
+            Console.Write("Your answer(s): ");
+            string input = Console.ReadLine();
+            var answers = input.Split(',', StringSplitOptions.RemoveEmptyEntries);
+
+            bool correct = true;
+            for (int i = 0; i < question.Answers.Count; i++)
+            {
+                bool shouldBeTrue = question.Answers[i].IsCorrect;
+                bool userChose = answers.Contains((i + 1).ToString());
+                if (shouldBeTrue != userChose)
+                {
+                    correct = false;
+                    break;
+                }
+            }
+
+            if (correct)
+            {
+                Console.WriteLine("✅ Correct!\n");
+                score++;
+            }
+            else
+            {
+                Console.WriteLine("❌ Wrong!\n");
+            }
+        }
+
+        Console.WriteLine($"You scored {score} out of {total}!");
     }
+    }
+
+
 }

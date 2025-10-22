@@ -26,6 +26,22 @@ namespace QuizMaker
                 serializer.Serialize(fs, quiz);
             }
         }
+        
+        public static Quiz LoadQuiz(string filePath)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(Quiz));
+            using (FileStream fs = new FileStream(filePath, FileMode.Open))
+            {
+                return (Quiz)serializer.Deserialize(fs);
+            }
+        }
+
+        public static List<string> GetAvailableQuizzes()
+        {
+            Directory.CreateDirectory(QuizFolder);
+            var files = Directory.GetFiles(QuizFolder, "*.xml");
+            return new List<string>(files);
+        }
 
        
     }
