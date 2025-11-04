@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 
@@ -7,12 +8,6 @@ namespace QuizMaker
     public static class QuizManager
     {
         private static readonly string QuizFolder = Path.Combine(AppContext.BaseDirectory, "quizzes");
-
-        public static Quiz CreateEmptyQuiz(string title)
-        {
-            Directory.CreateDirectory(QuizFolder);
-            return new Quiz { Title = title };
-        }
 
         public static void SaveQuiz(Quiz quiz)
         {
@@ -26,7 +21,7 @@ namespace QuizMaker
                 serializer.Serialize(fs, quiz);
             }
         }
-        
+
         public static Quiz LoadQuiz(string filePath)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(Quiz));
@@ -42,7 +37,5 @@ namespace QuizMaker
             var files = Directory.GetFiles(QuizFolder, "*.xml");
             return new List<string>(files);
         }
-
-       
     }
 }
