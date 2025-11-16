@@ -13,7 +13,7 @@ namespace QuizMaker
             string title = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(title)) return null;
 
-            Quiz quiz = new Quiz { Title = title };
+            Quiz quiz = new() { Title = title };
 
             while (true)
             {
@@ -21,17 +21,15 @@ namespace QuizMaker
                 string questionText = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(questionText)) break;
 
-                Question q = new Question { Text = questionText };
-
-                Console.WriteLine("How many answers do you want to add?");
-                if (!int.TryParse(Console.ReadLine(), out int answerCount)) continue;
+                Question q = new() { Text = questionText };
+                int answerCount = Program.ReadInt("How many answers? ", 2, 10);
 
                 for (int i = 0; i < answerCount; i++)
                 {
                     Console.WriteLine($"Enter answer {i + 1}:");
                     string answerText = Console.ReadLine();
 
-                    Console.WriteLine("Is this answer correct? (y/n)");
+                    Console.Write("Is this answer correct? (y/n): ");
                     bool isCorrect = Console.ReadLine()?.Trim().ToLower() == "y";
 
                     q.Answers.Add(new Answer { Text = answerText, IsCorrect = isCorrect });
@@ -51,13 +49,7 @@ namespace QuizMaker
                 Console.WriteLine($"{i + 1}. {Path.GetFileNameWithoutExtension(quizzes[i])}");
             }
 
-            Console.WriteLine("Enter the number of the quiz you want to play:");
-            if (!int.TryParse(Console.ReadLine(), out int choice) || choice < 1 || choice > quizzes.Count)
-            {
-                Console.WriteLine("Invalid choice.");
-                return null;
-            }
-
+            int choice = Program.ReadInt("Enter quiz number: ", 1, quizzes.Count);
             return quizzes[choice - 1];
         }
 
@@ -66,10 +58,9 @@ namespace QuizMaker
             Console.WriteLine($"\nStarting quiz: {quiz.Title}\n");
 
             int score = 0;
-            int total = quiz.Questions.Count;
-            Random rng = new Random();
+            var rng = new Random();
 
-            foreach (var question in quiz.Questions.OrderBy(q => rng.Next()))
+            foreach (var question in quiz.Questions.Shuffle())
             {
                 Console.WriteLine(question.Text);
 
@@ -78,21 +69,14 @@ namespace QuizMaker
                     Console.WriteLine($"{i + 1}. {question.Answers[i].Text}");
                 }
 
-                Console.Write("Your answer(s): ");
-                string input = Console.ReadLine();
-                var answers = input.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                Console.Write("Your answer(s) (comma-separated): ");
+                string input = Console.ReadLine() ?? "";
+                var answers = input.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                   .Select(a => a.Trim()).ToList();
 
-                bool correct = true;
-                for (int i = 0; i < question.Answers.Count; i++)
-                {
-                    bool shouldBeTrue = question.Answers[i].IsCorrect;
-                    bool userChose = answers.Contains((i + 1).ToString());
-                    if (shouldBeTrue != userChose)
-                    {
-                        correct = false;
-                        break;
-                    }
-                }
+                bool correct = question.Answers
+                    .Select((a, i) => (a.IsCorrect, chosen: answers.Contains((i + 1).ToString())))
+                    .All(x => x.IsCorrect == x.chosen);
 
                 if (correct)
                 {
@@ -105,7 +89,7 @@ namespace QuizMaker
                 }
             }
 
-            Console.WriteLine($"You scored {score} out of {total}!");
+            Console.WriteLine($"You scored {score} out of {quiz.Questions.Count}!");
         }
     }
 }

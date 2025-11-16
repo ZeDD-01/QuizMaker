@@ -15,20 +15,16 @@ namespace QuizMaker
             string safeTitle = string.Join("_", quiz.Title.Split(Path.GetInvalidFileNameChars()));
             string filePath = Path.Combine(QuizFolder, $"{safeTitle}.xml");
 
-            XmlSerializer serializer = new XmlSerializer(typeof(Quiz));
-            using (FileStream fs = new FileStream(filePath, FileMode.Create))
-            {
-                serializer.Serialize(fs, quiz);
-            }
+            XmlSerializer serializer = new(typeof(Quiz));
+            using FileStream fs = new(filePath, FileMode.Create);
+            serializer.Serialize(fs, quiz);
         }
 
         public static Quiz LoadQuiz(string filePath)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(Quiz));
-            using (FileStream fs = new FileStream(filePath, FileMode.Open))
-            {
-                return (Quiz)serializer.Deserialize(fs);
-            }
+            XmlSerializer serializer = new(typeof(Quiz));
+            using FileStream fs = new(filePath, FileMode.Open);
+            return (Quiz)serializer.Deserialize(fs);
         }
 
         public static List<string> GetAvailableQuizzes()
