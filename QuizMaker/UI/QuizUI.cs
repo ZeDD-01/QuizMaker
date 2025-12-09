@@ -7,7 +7,7 @@ namespace QuizMaker
 {
     public static class QuizUI
     {
-        // Nur eine Random-Instanz
+        // Single Random-Instance
         private static readonly Random rng = new();
 
         public static Quiz CreateQuizUI()
@@ -28,7 +28,7 @@ namespace QuizMaker
 
                 int answerCount = ReadInt("How many answers? ", 2, 10);
 
-                // Neu: ausgelagerte Methode
+                // outsources method
                 CreateAnswers(q, answerCount);
 
                 quiz.Questions.Add(q);
@@ -95,7 +95,7 @@ namespace QuizMaker
             Console.WriteLine($"You scored {score} out of {quiz.Questions.Count}!");
         }
 
-        // Neu: Aus Program herausgelöst, da UI
+        // Removed from program because UI
         public static int ReadInt(string prompt, int min, int max)
         {
             while (true)

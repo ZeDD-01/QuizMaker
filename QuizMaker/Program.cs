@@ -23,7 +23,7 @@ namespace QuizMaker
                     Console.WriteLine($"{(int)option}. {option}");
                 }
 
-                // Hier geändert:
+                
                 int choice = QuizUI.ReadInt("Select an option: ", 1, MenuActions.Count);
 
                 var selected = (MenuOption)choice;

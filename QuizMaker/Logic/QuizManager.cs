@@ -9,7 +9,7 @@ namespace QuizMaker
     {
         private static readonly string QuizFolder = Path.Combine(AppContext.BaseDirectory, "quizzes");
 
-        // Wiederverwendbarer Serializer
+        // Reusable serializer
         private static readonly XmlSerializer Serializer = new(typeof(Quiz));
 
         public static void SaveQuiz(Quiz quiz)
