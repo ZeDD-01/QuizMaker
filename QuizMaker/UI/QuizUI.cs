@@ -7,6 +7,9 @@ namespace QuizMaker
 {
     public static class QuizUI
     {
+        // Nur eine Random-Instanz
+        private static readonly Random rng = new();
+
         public static Quiz CreateQuizUI()
         {
             Console.WriteLine("Enter a title for your quiz:");
@@ -22,23 +25,30 @@ namespace QuizMaker
                 if (string.IsNullOrWhiteSpace(questionText)) break;
 
                 Question q = new() { Text = questionText };
-                int answerCount = Program.ReadInt("How many answers? ", 2, 10);
 
-                for (int i = 0; i < answerCount; i++)
-                {
-                    Console.WriteLine($"Enter answer {i + 1}:");
-                    string answerText = Console.ReadLine();
+                int answerCount = ReadInt("How many answers? ", 2, 10);
 
-                    Console.Write("Is this answer correct? (y/n): ");
-                    bool isCorrect = Console.ReadLine()?.Trim().ToLower() == "y";
-
-                    q.Answers.Add(new Answer { Text = answerText, IsCorrect = isCorrect });
-                }
+                // Neu: ausgelagerte Methode
+                CreateAnswers(q, answerCount);
 
                 quiz.Questions.Add(q);
             }
 
             return quiz;
+        }
+
+        private static void CreateAnswers(Question q, int answerCount)
+        {
+            for (int i = 0; i < answerCount; i++)
+            {
+                Console.WriteLine($"Enter answer {i + 1}:");
+                string answerText = Console.ReadLine();
+
+                Console.Write("Is this answer correct? (y/n): ");
+                bool isCorrect = Console.ReadLine()?.Trim().ToLower() == "y";
+
+                q.Answers.Add(new Answer { Text = answerText, IsCorrect = isCorrect });
+            }
         }
 
         public static string SelectQuizUI(List<string> quizzes)
@@ -49,7 +59,7 @@ namespace QuizMaker
                 Console.WriteLine($"{i + 1}. {Path.GetFileNameWithoutExtension(quizzes[i])}");
             }
 
-            int choice = Program.ReadInt("Enter quiz number: ", 1, quizzes.Count);
+            int choice = ReadInt("Enter quiz number: ", 1, quizzes.Count);
             return quizzes[choice - 1];
         }
 
@@ -58,9 +68,8 @@ namespace QuizMaker
             Console.WriteLine($"\nStarting quiz: {quiz.Title}\n");
 
             int score = 0;
-            var rng = new Random();
 
-            foreach (var question in quiz.Questions.Shuffle())
+            foreach (var question in quiz.Questions.Shuffle(rng))
             {
                 Console.WriteLine(question.Text);
 
@@ -78,18 +87,26 @@ namespace QuizMaker
                     .Select((a, i) => (a.IsCorrect, chosen: answers.Contains((i + 1).ToString())))
                     .All(x => x.IsCorrect == x.chosen);
 
-                if (correct)
-                {
-                    Console.WriteLine("✅ Correct!\n");
-                    score++;
-                }
-                else
-                {
-                    Console.WriteLine("❌ Wrong!\n");
-                }
+                Console.WriteLine(correct ? "✅ Correct!\n" : "❌ Wrong!\n");
+
+                if (correct) score++;
             }
 
             Console.WriteLine($"You scored {score} out of {quiz.Questions.Count}!");
+        }
+
+        // Neu: Aus Program herausgelöst, da UI
+        public static int ReadInt(string prompt, int min, int max)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                if (int.TryParse(Console.ReadLine(), out int value) &&
+                    value >= min && value <= max)
+                    return value;
+
+                Console.WriteLine($"Please enter a number between {min} and {max}.");
+            }
         }
     }
 }

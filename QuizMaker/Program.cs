@@ -17,12 +17,14 @@ namespace QuizMaker
             while (true)
             {
                 Console.WriteLine("\n=== Welcome to the Quiz Maker ===");
+
                 foreach (var option in MenuActions.Keys)
                 {
                     Console.WriteLine($"{(int)option}. {option}");
                 }
 
-                int choice = ReadInt("Select an option: ", 1, MenuActions.Count);
+                // Hier geändert:
+                int choice = QuizUI.ReadInt("Select an option: ", 1, MenuActions.Count);
 
                 var selected = (MenuOption)choice;
                 MenuActions[selected].Invoke();
@@ -56,19 +58,6 @@ namespace QuizMaker
 
             QuizManager.SaveQuiz(quiz);
             Console.WriteLine($"Quiz '{quiz.Title}' saved successfully!");
-        }
-
-        public static int ReadInt(string prompt, int min, int max)
-        {
-            while (true)
-            {
-                Console.Write(prompt);
-                if (int.TryParse(Console.ReadLine(), out int value) &&
-                    value >= min && value <= max)
-                    return value;
-
-                Console.WriteLine($"Please enter a number between {min} and {max}.");
-            }
         }
     }
 }

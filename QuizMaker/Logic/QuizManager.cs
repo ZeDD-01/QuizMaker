@@ -9,29 +9,30 @@ namespace QuizMaker
     {
         private static readonly string QuizFolder = Path.Combine(AppContext.BaseDirectory, "quizzes");
 
+        // Wiederverwendbarer Serializer
+        private static readonly XmlSerializer Serializer = new(typeof(Quiz));
+
         public static void SaveQuiz(Quiz quiz)
         {
             Directory.CreateDirectory(QuizFolder);
+
             string safeTitle = string.Join("_", quiz.Title.Split(Path.GetInvalidFileNameChars()));
             string filePath = Path.Combine(QuizFolder, $"{safeTitle}.xml");
 
-            XmlSerializer serializer = new(typeof(Quiz));
             using FileStream fs = new(filePath, FileMode.Create);
-            serializer.Serialize(fs, quiz);
+            Serializer.Serialize(fs, quiz);
         }
 
         public static Quiz LoadQuiz(string filePath)
         {
-            XmlSerializer serializer = new(typeof(Quiz));
             using FileStream fs = new(filePath, FileMode.Open);
-            return (Quiz)serializer.Deserialize(fs);
+            return (Quiz)Serializer.Deserialize(fs);
         }
 
         public static List<string> GetAvailableQuizzes()
         {
             Directory.CreateDirectory(QuizFolder);
-            var files = Directory.GetFiles(QuizFolder, "*.xml");
-            return new List<string>(files);
+            return new List<string>(Directory.GetFiles(QuizFolder, "*.xml"));
         }
     }
 }

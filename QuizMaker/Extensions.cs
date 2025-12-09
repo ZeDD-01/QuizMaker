@@ -6,8 +6,7 @@ namespace QuizMaker
 {
     public static class Extensions
     {
-        private static readonly Random rng = new();
-        public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source) =>
+        public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random rng) =>
             source.OrderBy(_ => rng.Next());
     }
 }
